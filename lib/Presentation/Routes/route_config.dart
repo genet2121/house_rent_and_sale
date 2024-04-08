@@ -1,10 +1,11 @@
+import 'package:appartment_rent_and_sale/Presentation/Screens/Home/UI/home.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class RouteConfig {
   // static UserAccount? currentUser = CurrentUser().userAccount;
 
-  static String initialLocation = '/dashboard';
+  static String initialLocation = '/home';
   // static String initialLocation = '/dashboard';
 
   static final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -23,10 +24,15 @@ class RouteConfig {
 
   static GoRouter returnRouter({required bool isAuth}) {
     GoRouter router = GoRouter(
-      initialLocation: '/start',
+      initialLocation: '/home',
       navigatorKey: _rootNavigatorKey,
       debugLogDiagnostics: true,
-      routes: [],
+      routes: [
+        GoRoute(
+          path: '/home',
+          builder: (context, state) => const HomeScreen(),
+        ),
+      ],
     );
 
     //   redirect: (context, state) {
