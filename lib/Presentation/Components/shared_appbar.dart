@@ -1,6 +1,7 @@
 import 'package:appartment_rent_and_sale/Data/Data%20Providers/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sidebarx/sidebarx.dart';
 
 class SharedAppBar extends StatelessWidget implements PreferredSizeWidget {
   const SharedAppBar({
@@ -20,6 +21,7 @@ class SharedAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     TextTheme _textTheme = Theme.of(context).textTheme;
+    final _controller = SidebarXController(selectedIndex: 0, extended: true);
     return Column(
       children: [
         AppBar(
@@ -44,34 +46,42 @@ class SharedAppBar extends StatelessWidget implements PreferredSizeWidget {
                     ),
                   )
                 : showMenuButton
-                    ? PopupMenuButton(
-                        itemBuilder: (BuildContext context) => [
-                          PopupMenuItem(
-                            child: Text('Item 1'),
-                            value: 'item1',
-                          ),
-                          PopupMenuItem(
-                            child: Text('Item 2'),
-                            value: 'item2',
-                          ),
-                          PopupMenuItem(
-                            child: Text('Item 3'),
-                            value: 'item3',
-                          ),
+                    ? SidebarX(
+                        controller: SidebarXController(
+                            selectedIndex: 0, extended: true),
+                        items: const [
+                          SidebarXItem(icon: Icons.home, label: 'Home'),
+                          SidebarXItem(icon: Icons.search, label: 'Search'),
                         ],
-                        onSelected: (value) {
-                          // Handle menu item selection here
-                          print('Selected item: $value');
-                        },
-                        child: Expanded(
-                            child: IconButton(
-                          onPressed: () => context.pop(),
-                          icon: Icon(
-                            Icons.menu,
-                            color: ColorResources.textColor,
-                          ),
-                        )),
                       )
+                    //  PopupMenuButton(
+                    //     itemBuilder: (BuildContext context) => [
+                    //       PopupMenuItem(
+                    //         child: Text('Item 1'),
+                    //         value: 'item1',
+                    //       ),
+                    //       PopupMenuItem(
+                    //         child: Text('Item 2'),
+                    //         value: 'item2',
+                    //       ),
+                    //       PopupMenuItem(
+                    //         child: Text('Item 3'),
+                    //         value: 'item3',
+                    //       ),
+                    //     ],
+                    //     onSelected: (value) {
+                    //       // Handle menu item selection here
+                    //       print('Selected item: $value');
+                    //     },
+                    //     child: Expanded(
+                    //         child: IconButton(
+                    //       onPressed: () => context.pop(),
+                    //       icon: Icon(
+                    //         Icons.menu,
+                    //         color: ColorResources.textColor,
+                    //       ),
+                    //     )),
+                    //   )
                     : SizedBox()),
         Expanded(
           child: Divider(
