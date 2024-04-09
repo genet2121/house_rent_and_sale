@@ -1,109 +1,78 @@
-// // // import 'package:appartment_rent_and_sale/Presentation/Components/shared_appbar.dart';
-// // // import 'package:flutter/material.dart';
-
-// // // class HomeScreen extends StatelessWidget {
-// // //   const HomeScreen({super.key});
-
-// // //   @override
-// // //   Widget build(BuildContext context) {
-// // //     var sizeH = MediaQuery.of(context).size.height;
-// // //     var sizeW = MediaQuery.of(context).size.width;
-// // //     return Scaffold(
-// // //       appBar: SharedAppBar(
-// // //         screenHeight: sizeH,
-// // //         titleText: 'Home',
-// // //         showBackButton: false,
-// // //         showMenuButton: true,
-// // //       ),
-// // //     );
-// // //   }
-// // // }
-
 import 'package:flutter/material.dart';
 import 'package:sidebarx/sidebarx.dart';
 
-class HomeScreen extends StatelessWidget {
-  HomeScreen({
-    Key? key,
-  }) : super(key: key);
+import 'colors.dart';
 
+class HomeScreenBody extends StatelessWidget {
+  HomeScreenBody({Key? key, required this.controller}) : super(key: key);
+
+  final SidebarXController controller;
   final _controller = SidebarXController(selectedIndex: 0, extended: true);
   final _key = GlobalKey<ScaffoldState>();
-
-  // final SidebarXController controller;
-
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'SidebarX Example',
-      theme: ThemeData(
-        primaryColor: primaryColor,
-        canvasColor: canvasColor,
-        scaffoldBackgroundColor: white,
-        textTheme: const TextTheme(
-          headlineSmall: TextStyle(
-            color: canvasColor,
-            fontSize: 46,
-            fontWeight: FontWeight.w800,
-          ),
-        ),
-      ),
-      home: Builder(
-        builder: (context) {
-          final isSmallScreen = MediaQuery.of(context).size.width < 600;
-          return Scaffold(
-            key: _key,
-            appBar:
-                // isSmallScreen
-                //     ?
-                AppBar(
-              backgroundColor: white,
-              title: Text(_getTitleByIndex(_controller.selectedIndex)),
-              leading: IconButton(
-                onPressed: () {
-                  // if (!Platform.isAndroid && !Platform.isIOS) {
-                  //   _controller.setExtended(true);
-                  // }
-                  _key.currentState?.openDrawer();
-                },
-                icon: const Icon(Icons.menu),
-              ),
+    return Builder(
+      builder: (context) {
+        final isSmallScreen = MediaQuery.of(context).size.width < 600;
+        return Scaffold(
+          appBar: AppBar(
+            backgroundColor: white,
+            title: Text(_getTitleByIndex(_controller.selectedIndex)),
+            leading: IconButton(
+              onPressed: () {
+                // if (!Platform.isAndroid && !Platform.isIOS) {
+                //   _controller.setExtended(true);
+                // }
+                _key.currentState?.openDrawer();
+              },
+              icon: const Icon(Icons.menu),
             ),
-
-            // : null,
-            drawer: ExampleSidebarX(controller: _controller),
-            body: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const Divider(
-                  height: 1, // Adjust the height of the divider
-                  color: Colors.grey, // Change the color of the divider
-                ),
-                Expanded(
-                  child: Row(
-                    children: [
-                      if (!isSmallScreen)
-                        ExampleSidebarX(controller: _controller),
-                      Expanded(
-                        child: Center(
-                          child: _ScreensExample(
-                            controller: _controller,
-                          ),
-                        ),
-                      ),
-                    ],
+          ),
+          drawer: ExampleSidebarX(controller: _controller),
+          body: Row(
+            children: [
+              if (!isSmallScreen) ExampleSidebarX(controller: _controller),
+              Expanded(
+                child: Center(
+                  child: _ScreensExample(
+                    controller: _controller,
                   ),
                 ),
-              ],
-            ),
-          );
-        },
-      ),
+              ),
+            ],
+          ),
+          // Row(
+          //   children: [
+          //     if (!isSmallScreen) ExampleSidebarX(controller: controller),
+          //     Expanded(
+          //       child: Center(
+          //         child: _ScreensExample(controller: controller),
+          //       ),
+          //     ),
+          //   ],
+          // ),
+        );
+      },
     );
   }
 }
 
+// class ExampleSidebarX extends StatelessWidget {
+//   const ExampleSidebarX({
+//     Key? key,
+//     required this.controller,
+//   }) : super(key: key);
+
+//   final SidebarXController controller;
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return SidebarX(
+//       controller: controller,
+//       // SidebarX theme and items...
+//     );
+//   }
+// }
 class ExampleSidebarX extends StatelessWidget {
   const ExampleSidebarX({
     Key? key,
@@ -235,7 +204,7 @@ class _ScreensExample extends StatelessWidget {
       builder: (context, child) {
         final pageTitle = _getTitleByIndex(controller.selectedIndex);
         switch (controller.selectedIndex) {
-          case 10:
+          case 0:
             return ListView.builder(
               padding: const EdgeInsets.only(top: 10),
               itemBuilder: (context, index) => Container(
@@ -259,6 +228,50 @@ class _ScreensExample extends StatelessWidget {
     );
   }
 }
+// class _ScreensExample extends StatelessWidget {
+//   const _ScreensExample({
+//     Key? key,
+//     required this.controller,
+//   }) : super(key: key);
+
+//   final SidebarXController controller;
+
+//   @override
+//   Widget build(BuildContext context) {
+//     final theme = Theme.of(context);
+//     return AnimatedBuilder(
+//       animation: controller,
+//       builder: (context, child) {
+//         final pageTitle = _getTitleByIndex(controller.selectedIndex);
+//         switch (controller.selectedIndex) {
+//           case 0:
+//             return ListView.builder(
+//               padding: const EdgeInsets.only(top: 10),
+//               itemBuilder: (context, index) => Container(
+//                 height: 100,
+//                 width: double.infinity,
+//                 margin: const EdgeInsets.only(bottom: 10, right: 10, left: 10),
+//                 decoration: BoxDecoration(
+//                   borderRadius: BorderRadius.circular(20),
+//                   color: Theme.of(context).canvasColor,
+//                   boxShadow: const [BoxShadow()],
+//                 ),
+//               ),
+//             );
+//           default:
+//             return Text(
+//               pageTitle,
+//               style: theme.textTheme.headlineSmall,
+//             );
+//         }
+//       },
+//     );
+//   }
+// }
+
+// String _getTitleByIndex(int index) {
+
+// }
 
 String _getTitleByIndex(int index) {
   switch (index) {
@@ -280,45 +293,3 @@ String _getTitleByIndex(int index) {
       return 'Not found page';
   }
 }
-
-const primaryColor = Color(0xFF685BFF);
-const canvasColor = Color(0xFF2E2E48);
-const scaffoldBackgroundColor = Color(0xFF464667);
-const accentCanvasColor = Color(0xFF3E3E61);
-const white = Colors.white;
-final actionColor = const Color(0xFF5F5FA7).withOpacity(0.6);
-final divider = Divider(color: white.withOpacity(0.3), height: 1);
-
-
-
-// //import 'package:appartment_rent_and_sale/Presentation/Screens/Home/widget/colors.dart';
-// // import 'package:appartment_rent_and_sale/Presentation/Screens/Home/widget/sidebar.dart';
-// // import 'package:flutter/material.dart';
-// // import 'package:sidebarx/sidebarx.dart';
-
-// // class HomeScreen extends StatelessWidget {
-// //   const HomeScreen({Key? key}) : super(key: key);
-
-// //   @override
-// //   Widget build(BuildContext context) {
-// //     final _controller = SidebarXController(selectedIndex: 0, extended: true);
-
-// //     return MaterialApp(
-// //       debugShowCheckedModeBanner: false,
-// //       title: 'SidebarX Example',
-// //       theme: ThemeData(
-// //         primaryColor: primaryColor,
-// //         canvasColor: canvasColor,
-// //         scaffoldBackgroundColor: white,
-// //         textTheme: const TextTheme(
-// //           headlineSmall: TextStyle(
-// //             color: canvasColor,
-// //             fontSize: 46,
-// //             fontWeight: FontWeight.w800,
-// //           ),
-// //         ),
-// //       ),
-// //       home: HomeScreenBody(controller: _controller),
-// //     );
-// //   }
-// // }
