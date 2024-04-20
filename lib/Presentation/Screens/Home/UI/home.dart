@@ -1,324 +1,103 @@
-// // // import 'package:appartment_rent_and_sale/Presentation/Components/shared_appbar.dart';
-// // // import 'package:flutter/material.dart';
-
-// // // class HomeScreen extends StatelessWidget {
-// // //   const HomeScreen({super.key});
-
-// // //   @override
-// // //   Widget build(BuildContext context) {
-// // //     var sizeH = MediaQuery.of(context).size.height;
-// // //     var sizeW = MediaQuery.of(context).size.width;
-// // //     return Scaffold(
-// // //       appBar: SharedAppBar(
-// // //         screenHeight: sizeH,
-// // //         titleText: 'Home',
-// // //         showBackButton: false,
-// // //         showMenuButton: true,
-// // //       ),
-// // //     );
-// // //   }
-// // // }
-
+import 'package:appartment_rent_and_sale/Presentation/Components/shared_appbar.dart';
+import 'package:appartment_rent_and_sale/Presentation/Screens/Home/widget/sidebar.dart';
 import 'package:flutter/material.dart';
-import 'package:sidebarx/sidebarx.dart';
 
-class HomeScreen extends StatelessWidget {
-  HomeScreen({
-    Key? key,
-  }) : super(key: key);
-
-  final _controller = SidebarXController(selectedIndex: 0, extended: true);
-  final _key = GlobalKey<ScaffoldState>();
-
-  // final SidebarXController controller;
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'SidebarX Example',
-      theme: ThemeData(
-        primaryColor: primaryColor,
-        canvasColor: canvasColor,
-        scaffoldBackgroundColor: white,
-        textTheme: const TextTheme(
-          headlineSmall: TextStyle(
-            color: canvasColor,
-            fontSize: 46,
-            fontWeight: FontWeight.w800,
-          ),
-        ),
-      ),
-      home: Builder(
-        builder: (context) {
-          final isSmallScreen = MediaQuery.of(context).size.width < 600;
-          return Scaffold(
-            key: _key,
-            appBar:
-                // isSmallScreen
-                //     ?
-                AppBar(
-              backgroundColor: white,
-              title: Text(_getTitleByIndex(_controller.selectedIndex)),
-              leading: IconButton(
-                onPressed: () {
-                  // if (!Platform.isAndroid && !Platform.isIOS) {
-                  //   _controller.setExtended(true);
-                  // }
-                  _key.currentState?.openDrawer();
-                },
-                icon: const Icon(Icons.menu),
-              ),
-            ),
-
-            // : null,
-            drawer: ExampleSidebarX(controller: _controller),
-            body: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const Divider(
-                  height: 1, // Adjust the height of the divider
-                  color: Colors.grey, // Change the color of the divider
-                ),
-                Expanded(
-                  child: Row(
-                    children: [
-                      if (!isSmallScreen)
-                        ExampleSidebarX(controller: _controller),
-                      Expanded(
-                        child: Center(
-                          child: _ScreensExample(
-                            controller: _controller,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          );
-        },
-      ),
-    );
-  }
+  _HomeScreenState createState() => _HomeScreenState();
 }
 
-class ExampleSidebarX extends StatelessWidget {
-  const ExampleSidebarX({
-    Key? key,
-    required SidebarXController controller,
-  })  : _controller = controller,
-        super(key: key);
+class _HomeScreenState extends State<HomeScreen> {
+  String selectedMenuItem = 'Home'; // Initial selected menu item
 
-  final SidebarXController _controller;
+  void onMenuItemSelected(String selectedItem) {
+    setState(() {
+      selectedMenuItem = selectedItem;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return SidebarX(
-      controller: _controller,
-      theme: SidebarXTheme(
-        margin: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          color: canvasColor,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        hoverColor: scaffoldBackgroundColor,
-        textStyle: TextStyle(color: Colors.white.withOpacity(0.7)),
-        selectedTextStyle: const TextStyle(color: Colors.white),
-        hoverTextStyle: const TextStyle(
-          color: Colors.white,
-          fontWeight: FontWeight.w500,
-        ),
-        itemTextPadding: const EdgeInsets.only(left: 30),
-        selectedItemTextPadding: const EdgeInsets.only(left: 30),
-        itemDecoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: canvasColor),
-        ),
-        selectedItemDecoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(
-            color: actionColor.withOpacity(0.37),
-          ),
-          gradient: const LinearGradient(
-            colors: [accentCanvasColor, canvasColor],
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.28),
-              blurRadius: 30,
-            )
+    return Scaffold(
+      drawer: SideBar(onMenuItemSelected: onMenuItemSelected),
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(kToolbarHeight),
+        child: Column(
+          children: [
+            AppBar(
+              title: Text(selectedMenuItem),
+              backgroundColor: Colors.white,
+            ),
+            Divider(
+              height: 0, // Ensure the divider has no height to fit seamlessly
+              thickness: 1, // Set the thickness of the divider
+              color: Colors.grey[900], // Set the color of the divider
+            ),
           ],
         ),
-        iconTheme: IconThemeData(
-          color: Colors.white.withOpacity(0.7),
-          size: 20,
-        ),
-        selectedIconTheme: const IconThemeData(
-          color: Colors.white,
-          size: 20,
-        ),
       ),
-      extendedTheme: const SidebarXTheme(
-        width: 200,
-        decoration: BoxDecoration(
-          color: canvasColor,
-        ),
+      body: Center(
+        child: buildBodyContent(selectedMenuItem),
       ),
-      footerDivider: divider,
-      headerBuilder: (context, extended) {
-        return SizedBox(
-          height: 100,
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Image.asset('assets/images/avatar.png'),
+    );
+  }
+
+  Widget buildBodyContent(String menuItem) {
+    switch (menuItem) {
+      case 'Home':
+        return const Center(
+          child: Text(
+            'Home Page',
+            style: TextStyle(fontSize: 40.0),
           ),
         );
-      },
-      items: [
-        SidebarXItem(
-          icon: Icons.home,
-          label: 'Home',
-          onTap: () {
-            debugPrint('Home');
-          },
-        ),
-        const SidebarXItem(
-          icon: Icons.search,
-          label: 'Search',
-        ),
-        const SidebarXItem(
-          icon: Icons.people,
-          label: 'People',
-        ),
-        SidebarXItem(
-          icon: Icons.favorite,
-          label: 'Favorites',
-          selectable: false,
-          onTap: () => _showDisabledAlert(context),
-        ),
-        const SidebarXItem(
-          iconWidget: FlutterLogo(size: 20),
-          label: 'Flutter',
-        ),
-      ],
-    );
-  }
-
-  void _showDisabledAlert(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text(
-          'Item disabled for selecting',
-          style: TextStyle(color: Colors.black),
-        ),
-        backgroundColor: Colors.white,
-      ),
-    );
+      case 'Upload':
+        return const Center(
+          child: Text(
+            'Upload Page',
+            style: TextStyle(fontSize: 40.0),
+          ),
+        );
+      case 'Logout':
+        return const Center(
+          child: Text(
+            'Logout Page',
+            style: TextStyle(fontSize: 40.0),
+          ),
+        );
+      default:
+        return Container(); // Handle unknown menu items
+    }
   }
 }
 
-class _ScreensExample extends StatelessWidget {
-  const _ScreensExample({
-    Key? key,
-    required this.controller,
-  }) : super(key: key);
+// class HomeScreen extends StatelessWidget {
+//   const HomeScreen({super.key});
 
-  final SidebarXController controller;
+//   @override
+//   Widget build(BuildContext context) {
+//     var sizeH = MediaQuery.of(context).size.height;
+//     var sizeW = MediaQuery.of(context).size.width;
+//     return Scaffold(
+//         drawer: const SideBar(),
+//         appBar: AppBar(
+//           title: const Center(child: Text('Home')),
+//           backgroundColor: Colors.white,
+//         ),
+//         body: const Center(
+//             child: Text(
+//           'MainPage',
+//           style: TextStyle(fontSize: 40.0),
+//         ))
+//         // SharedAppBar(
+//         //   screenHeight: sizeH,
+//         //   titleText: 'Home',
+//         //   showBackButton: false,
+//         //   showMenuButton: true,
+//         // ),
+//         );
+//   }
+// }
 
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return AnimatedBuilder(
-      animation: controller,
-      builder: (context, child) {
-        final pageTitle = _getTitleByIndex(controller.selectedIndex);
-        switch (controller.selectedIndex) {
-          case 10:
-            return ListView.builder(
-              padding: const EdgeInsets.only(top: 10),
-              itemBuilder: (context, index) => Container(
-                height: 100,
-                width: double.infinity,
-                margin: const EdgeInsets.only(bottom: 10, right: 10, left: 10),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: Theme.of(context).canvasColor,
-                  boxShadow: const [BoxShadow()],
-                ),
-              ),
-            );
-          default:
-            return Text(
-              pageTitle,
-              style: theme.textTheme.headlineSmall,
-            );
-        }
-      },
-    );
-  }
-}
-
-String _getTitleByIndex(int index) {
-  switch (index) {
-    case 0:
-      return 'Home';
-    case 1:
-      return 'Search';
-    case 2:
-      return 'People';
-    case 3:
-      return 'Favorites';
-    case 4:
-      return 'Custom iconWidget';
-    case 5:
-      return 'Profile';
-    case 6:
-      return 'Settings';
-    default:
-      return 'Not found page';
-  }
-}
-
-const primaryColor = Color(0xFF685BFF);
-const canvasColor = Color(0xFF2E2E48);
-const scaffoldBackgroundColor = Color(0xFF464667);
-const accentCanvasColor = Color(0xFF3E3E61);
-const white = Colors.white;
-final actionColor = const Color(0xFF5F5FA7).withOpacity(0.6);
-final divider = Divider(color: white.withOpacity(0.3), height: 1);
-
-
-
-// //import 'package:appartment_rent_and_sale/Presentation/Screens/Home/widget/colors.dart';
-// // import 'package:appartment_rent_and_sale/Presentation/Screens/Home/widget/sidebar.dart';
-// // import 'package:flutter/material.dart';
-// // import 'package:sidebarx/sidebarx.dart';
-
-// // class HomeScreen extends StatelessWidget {
-// //   const HomeScreen({Key? key}) : super(key: key);
-
-// //   @override
-// //   Widget build(BuildContext context) {
-// //     final _controller = SidebarXController(selectedIndex: 0, extended: true);
-
-// //     return MaterialApp(
-// //       debugShowCheckedModeBanner: false,
-// //       title: 'SidebarX Example',
-// //       theme: ThemeData(
-// //         primaryColor: primaryColor,
-// //         canvasColor: canvasColor,
-// //         scaffoldBackgroundColor: white,
-// //         textTheme: const TextTheme(
-// //           headlineSmall: TextStyle(
-// //             color: canvasColor,
-// //             fontSize: 46,
-// //             fontWeight: FontWeight.w800,
-// //           ),
-// //         ),
-// //       ),
-// //       home: HomeScreenBody(controller: _controller),
-// //     );
-// //   }
-// // }

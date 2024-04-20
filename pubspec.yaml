@@ -65,6 +65,8 @@ dependencies:
   flutter_image_compress: ^2.1.0
   uuid: ^4.3.3
   sidebarx: ^0.17.1
+  provider: ^6.1.2
+  flutter_riverpod: ^2.5.1
 
 
 dev_dependencies:
